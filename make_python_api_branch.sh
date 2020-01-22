@@ -7,9 +7,9 @@ git checkout --orphan python-api
 find . -maxdepth 1 \! -regex  '.*\(PythonAPI\|common\|\.\|\.\.\|\.git\)$' | xargs rm -r
 mv PythonAPI/* .
 rm -r PythonAPI
-sed -i 's/..\///g' setup.py
+sed -i 's/..\/common/common/g' setup.py
 git add .
 git commit -m "Cleaned master and pushed python-api branch"
 git push origin python-api -f
 cd ..
-rm -r tmp_cocoapi
+rm -rf tmp_cocoapi
