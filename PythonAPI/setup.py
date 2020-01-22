@@ -28,8 +28,8 @@ ext_modules = [
 
 setup(
     name='rays_pycocotools',
-    packages=['pycocotools'],
-    package_dir={'pycocotools': 'pycocotools'},
-    version='2.0',
+    packages=['rays_pycocotools'],
+    package_dir={'rays_pycocotools': 'rays_pycocotools'},
+    version='2.1',
     ext_modules=ext_modules
 )
