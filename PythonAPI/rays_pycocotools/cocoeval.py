@@ -274,6 +274,7 @@ class COCOeval:
         ground_truth_matches = np.zeros((iou_thresh_count, ground_truth_count))
         detection_matches = np.zeros((iou_thresh_count, detection_count))
         ground_truth_ignore = np.array([g['_ignore'] for g in ground_truth])
+        detection_match_classes = np.zeros((iou_thresh_count, detection_count, 2))
         detection_ignore = np.zeros((iou_thresh_count, detection_count))
         eps = np.finfo(float).eps
 
@@ -305,10 +306,14 @@ class COCOeval:
 
                     detection_ignore[iou_thresh_ind, detection_ind] = ground_truth_ignore[gt_match_index]
                     detection_matches[iou_thresh_ind, detection_ind] = ground_truth[gt_match_index]['id']
+                    detection_match_classes[iou_thresh_ind, detection_ind] = [
+                        ground_truth[gt_match_index]['category_id'], d['category_id']  # Ground Truth Cat, Detection Cat
+                    ]
                     ground_truth_matches[iou_thresh_ind, gt_match_index] = d['id']
 
         # set unmatched detections outside of area range to ignore
         a = np.array([d['area'] < aRng[0] or d['area'] > aRng[1] for d in detections]).reshape((1, len(detections)))
+
         detection_ignore = np.logical_or(detection_ignore,
                                          np.logical_and(detection_matches == 0, np.repeat(a, iou_thresh_count, 0)))
         # store results for given image and category
@@ -321,6 +326,7 @@ class COCOeval:
             'gtIds': [g['id'] for g in ground_truth],
             'dtMatches': detection_matches,
             'gtMatches': ground_truth_matches,
+            'dtMatchesClass': detection_match_classes,
             'dtScores': [d['score'] for d in detections],
             'gtIgnore': ground_truth_ignore,
             'dtIgnore': detection_ignore,
@@ -374,12 +380,13 @@ class COCOeval:
         # retrieve evaluation image at each category, area range, and max number of detections
         for class_ind in class_ind_list:
             Nk = class_ind * area_list_count * image_list_count
-            for area_ind in area_ind_list:
 
+            for area_ind in area_ind_list:
                 Na = area_ind * image_list_count
                 for max_det_ind, max_det in enumerate(m_list):
                     eval_imgs = [self.evalImgs[Nk + Na + i] for i in image_ind_list]
                     eval_imgs = [e for e in eval_imgs if not e is None]
+
                     if len(eval_imgs) == 0:
                         continue
                     det_scores = np.concatenate([img['dtScores'][0:max_det] for img in eval_imgs])
@@ -387,7 +394,6 @@ class COCOeval:
                     # different sorting method generates slightly different results.
                     # mergesort is used to be consistent as Matlab implementation.
                     sort_inds = np.argsort(-det_scores, kind='mergesort')
-                    det_scores_sorted = det_scores[sort_inds]
 
                     det_matches = np.concatenate([img['dtMatches'][:, 0:max_det] for img in eval_imgs], axis=1)[:,
                                   sort_inds]
@@ -437,6 +443,7 @@ class COCOeval:
                         # Find where the closest recall level position for each recall value
                         recall_insertion_indexes = np.searchsorted(det_recall, p.recThrs, side='left')
                         try:
+                            det_scores_sorted = det_scores[sort_inds]
                             # Get the interpolated precision value at each recall level
                             for recall_level, recall_idx in enumerate(recall_insertion_indexes):
                                 # Insert the highest precision value at the current recall level
