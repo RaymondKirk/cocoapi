@@ -274,7 +274,6 @@ class COCOeval:
         ground_truth_matches = np.zeros((iou_thresh_count, ground_truth_count))
         detection_matches = np.zeros((iou_thresh_count, detection_count))
         ground_truth_ignore = np.array([g['_ignore'] for g in ground_truth])
-        detection_match_classes = np.zeros((iou_thresh_count, detection_count, 2))
         detection_ignore = np.zeros((iou_thresh_count, detection_count))
         eps = np.finfo(float).eps
 
@@ -306,9 +305,6 @@ class COCOeval:
 
                     detection_ignore[iou_thresh_ind, detection_ind] = ground_truth_ignore[gt_match_index]
                     detection_matches[iou_thresh_ind, detection_ind] = ground_truth[gt_match_index]['id']
-                    detection_match_classes[iou_thresh_ind, detection_ind] = [
-                        ground_truth[gt_match_index]['category_id'], d['category_id']  # Ground Truth Cat, Detection Cat
-                    ]
                     ground_truth_matches[iou_thresh_ind, gt_match_index] = d['id']
 
         # set unmatched detections outside of area range to ignore
@@ -326,7 +322,6 @@ class COCOeval:
             'gtIds': [g['id'] for g in ground_truth],
             'dtMatches': detection_matches,
             'gtMatches': ground_truth_matches,
-            'dtMatchesClass': detection_match_classes,
             'dtScores': [d['score'] for d in detections],
             'gtIgnore': ground_truth_ignore,
             'dtIgnore': detection_ignore,
