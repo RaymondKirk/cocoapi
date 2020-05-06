@@ -11,5 +11,6 @@ sed -i 's/..\/common/common/g' setup.py
 git add .
 git commit -m "Cleaned master and pushed python-api branch"
 git push origin python-api -f
+bash push_to_pypi.sh
 cd ..
 rm -rf tmp_cocoapi
