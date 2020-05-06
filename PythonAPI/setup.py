@@ -30,6 +30,6 @@ setup(
     name='rays_pycocotools',
     packages=['rays_pycocotools'],
     package_dir={'rays_pycocotools': 'rays_pycocotools'},
-    version='2.2',
+    version='2.3',
     ext_modules=ext_modules
 )
