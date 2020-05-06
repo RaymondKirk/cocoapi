@@ -30,6 +30,8 @@ setup(
     name='rays_pycocotools',
     packages=['rays_pycocotools'],
     package_dir={'rays_pycocotools': 'rays_pycocotools'},
-    version='2.3',
+    description=open("README.md").read(),
+    long_description=open("README.md").read(),
+    version='2.4',
     ext_modules=ext_modules
 )
