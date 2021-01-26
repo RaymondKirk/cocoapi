@@ -5,7 +5,7 @@ install_requires = [
     'setuptools>=18.0',
     'cython>=0.27.3',
     'matplotlib>=2.1.0',
-    'numpy>=1.16.2,<=1.20'
+    'numpy>=1.16.2,<=1.19'
 ]
 
 dist.Distribution().fetch_build_eggs(install_requires)
@@ -32,7 +32,7 @@ setup(
     package_dir={'rays_pycocotools': 'rays_pycocotools'},
     description="Wrapper of pycocotools that correctly installs with pip.",
     long_description=open("README.md").read(),
-    version='2.6',
+    version='2.6.1',
     ext_modules=ext_modules,
     python_requires='>=3.6',
 )
