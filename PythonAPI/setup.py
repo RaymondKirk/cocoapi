@@ -32,7 +32,7 @@ setup(
     package_dir={'rays_pycocotools': 'rays_pycocotools'},
     description="Wrapper of pycocotools that correctly installs with pip.",
     long_description=open("README.md").read(),
-    version='2.4',
+    version='2.5',
     ext_modules=ext_modules,
     python_requires='>=3.6',
 )
